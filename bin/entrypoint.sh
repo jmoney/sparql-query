@@ -1,3 +1,3 @@
 #!/bin/sh
 
-python3 /app/main.py --query $1 > $2
+python3 /app/main.py --query-file $1 --local-ttl $2 > $3

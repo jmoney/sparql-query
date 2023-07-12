@@ -4,6 +4,8 @@ inputs:
   query:
     description: 'Root directory of notes'
     required: true
+  graph:
+    description: 'Graph represented as an RDF file'
   output-file:
     description: 'Output file'
     required: true
@@ -12,5 +14,6 @@ runs:
   image: 'Dockerfile'
   args:
     - ${{ inputs.query }}
+    - ${{ inputs.graph }}
     - ${{ inputs.output-file }}
     
