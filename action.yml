@@ -1,0 +1,16 @@
+name: 'notes2rdf'
+description: 'Convert notes directory structure to RDF'
+inputs:
+  query:
+    description: 'Root directory of notes'
+    required: true
+  output-file:
+    description: 'Output file'
+    required: true
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.query }}
+    - ${{ inputs.output-file }}
+    
