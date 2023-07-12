@@ -1,2 +1,3 @@
 **/*.ttl
 **/*.sparql
+markdown/*
