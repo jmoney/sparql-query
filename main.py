@@ -2,6 +2,10 @@ import argparse
 import rdflib
 
 from pathlib import Path
+from rdflib import Namespace
+
+
+NOTES_NS = Namespace('https://www.jmoney.dev/notes#')
 
 if __name__ == "__main__":
 
@@ -12,13 +16,21 @@ if __name__ == "__main__":
 
     parser.add_argument('--query-file', action='store', dest='query_file')
     parser.add_argument('--local-ttl', action='store', dest='local_ttl')
-    parser.add_argument('--format', action='store', dest='format', default='text/turtle')
+    parser.add_argument('--format', action='store', dest='format', default='json')
 
     args = parser.parse_args()
 
     g = rdflib.Graph()
-    result = g.parse(location=args.local_ttl, format=args.format)
+    location = Path(args.local_ttl)
+    if location.is_dir():
+        for file in location.iterdir():
+            if file.suffix == '.ttl':
+                g.parse(location=file, format="text/turtle")
+    else:
+        g.parse(location=location, format="text/turtle")
 
     query = Path(args.query_file).read_text()
     qres = g.query(query)
-    print(qres.serialize(format="json").decode('utf-8'))
+    if qres.type == 'CONSTRUCT':
+        qres.graph.bind('notes', NOTES_NS)
+    print(qres.serialize(format=args.format).decode('utf-8'))
