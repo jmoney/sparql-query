@@ -6,6 +6,9 @@ inputs:
     required: true
   graph:
     description: 'Graph represented as an RDF file'
+  format:
+    description: 'Format of the RDF file'
+    default: 'turtle'
   output-file:
     description: 'Output file'
     required: true
@@ -15,5 +18,6 @@ runs:
   args:
     - ${{ inputs.query }}
     - ${{ inputs.graph }}
+    - ${{ inputs.format }}
     - ${{ inputs.output-file }}
     
