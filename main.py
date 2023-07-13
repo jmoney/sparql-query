@@ -36,7 +36,7 @@ if __name__ == "__main__":
     bindings = {}
     for name, value in os.environ.items():
         if match := binding_re.match(name):
-            bindings = {**bindings, match.group('name'): rdflib.Literal(value, datatype=XSD.match.group('type'))}
+            bindings = {**bindings, match.group('name'): rdflib.Literal(value, datatype=XSD[match.group('type')])}
 
     qres = g.query(query, initBindings=bindings)
     if qres.type == 'CONSTRUCT':
