@@ -1,10 +1,12 @@
 import argparse
+import os
 import rdflib
 
 from pathlib import Path
-from rdflib import Namespace
+from rdflib import Namespace, XSD
 
 
+binding_re = re.compile(r'^SPARQL_BIND_(?P<type>.+)_(?P<name>.+)$')
 NOTES_NS = Namespace('https://www.jmoney.dev/notes#')
 
 if __name__ == "__main__":
@@ -30,7 +32,12 @@ if __name__ == "__main__":
         g.parse(location=location, format="text/turtle")
 
     query = Path(args.query_file).read_text()
-    qres = g.query(query)
+    bindings = {}
+    for name, value in os.environ.items():
+        if match := binding_re.match(name):
+            bindings = {**bindings, match.group('name'): rdflib.Literal(value, datatype=XSD.match.group('type'))}
+
+    qres = g.query(query, initBindings=bindings)
     if qres.type == 'CONSTRUCT':
         qres.graph.bind('notes', NOTES_NS)
     print(qres.serialize(format=args.format).decode('utf-8'))
