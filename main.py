@@ -1,6 +1,7 @@
 import argparse
 import os
 import rdflib
+import re
 
 from pathlib import Path
 from rdflib import Namespace, XSD
